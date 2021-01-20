@@ -1,0 +1,65 @@
+# declaration
+rooms = {
+    'Dungeon Room': {'North': 'Dungeon Hall'},
+    'Dungeon Hall': {'South': 'Dungeon Room', 'East': 'Grand Entrance Hall', 'Item': 'Iron Pike'},
+    'Grand Entrance Hall': {'North': 'Dining Hall', 'South': 'Cellar', 'East': 'Private Gallery', 'West': 'Dungeon Hall', 'Item': 'Health Potion'},
+    'Dining Hall': {'South': 'Grand Entrance Hall', 'East': 'Kitchen', 'Item': 'Dragonscale Breastplate'},
+    'Kitchen': {'West': 'Dining Hall', 'Item': 'Dragonscale Gauntlets'},
+    'Cellar': {'North': 'Grand Entrance Hall', 'East': 'Laboratory', 'Item': 'Iron Buckler'},
+    'Laboratory': {'West': 'Cellar', 'Item': 'Spell Book'},
+    'Private Gallery': {'West': 'Grand Entrance Hall', 'North': 'Grand Library', 'Item': 'Glowing Leather Pouch'},
+    'Grand Library': {'South': 'Private Gallery', 'Item': 'Nicol Bolas'}
+
+}
+state = 'Dungeon Room'
+# function
+def get_new_state(state, direction):
+    new_state = state  # declaration
+    for i in rooms:  # loop begins here
+        if i == state:  # if statement
+            if direction in rooms[i]:  # if statement
+                new_state = rooms[i][direction]  # assign new_state
+    return new_state  # return new_state
+def get_item(state):
+    if 'Item' not in rooms[state]:
+        return 'Never mind.'
+    else:
+        return rooms[state]['Item']  # return Item value
+# function
+def show_instructions():
+    # display a main menu and the command list
+    print('Welcome to the Dragon Text Adventure Game!!')
+    print('You must retrieve all of your lost items to win the game, or Nicol Bolas will notice your are weak.')
+    print('Move commands: go North, go South, go East, go West.')
+    print("Add to Inventory: get 'item name'.")
+    print("If you wish to exit the game type 'Exit'.")
+show_instructions()  # function call
+inventory = []
+while 1:  # gameplay loop begins
+    print('You are in ', state)  # printing state
+    print('Inventory:', inventory)  # inventory display
+    item = get_item(state)  # calling get_item function
+    print('You have located...', item)  # display item output
+    if item == 'Nicol Bolas':  # if statement
+        print('Nicol Bolas takes notice and realizes you are still weak. He begins casting powerful magic! Game Over!')
+        exit(0)
+    direction = input('What do you do? ')  # user asked what to do
+    if direction == 'Exit':
+        exit(0)
+    if (direction == 'go East' or direction == 'go West' or direction == 'go North' or direction == 'go South'):
+        direction = direction[3:]
+        new_state = get_new_state(state, direction)  # calling function
+        if new_state == state:  # if statement
+            print('The room has wall in that direction enter other direction!')  # display output
+        else:
+            state = new_state  # changing state value to new_state
+    elif direction == str('get ' + item):  # elif cont
+        if item in inventory:  # if item already present in inventory
+            print('It seems you already found this item. Let us try another location.')
+        else:
+            inventory.append(item)  # appending
+    else:
+        print('You cannot go that way.')  # print
+    if len(inventory) == 7:
+        print('You have retrieved all of your previous items, Nicol Bolas stands no chance now!!')  # display output
+        exit(0)
